@@ -2,23 +2,18 @@ package com.stream_optional.employeeBookStream.service.api;
 
 import com.stream_optional.employeeBookStream.domian.Employee;
 
-import java.util.Collection;
-import java.util.Optional;
+import java.util.List;
+import java.util.Map;
 
 public interface EmployeeService {
+    void setSalaryEmployee(Integer id, Integer salary);
+
     void addEmployee(Employee employee);
 
-    Collection<Employee> getAllEmployee();
+    Map<Integer, List<Employee>> getAllEmployee();
 
     void removeEmployee(Integer id);
 
     Employee findEmployee(Integer id);
 
-    void setSalaryEmployee(Integer id, Integer salary);
-
-    void setDepartmentEmployee(Integer id, Integer department);
-
-    Optional<Employee> findMaxSalaryByDepartment(Integer department);
-
-    Optional<Employee> findMinSalaryByDepartment(Integer department);
 }

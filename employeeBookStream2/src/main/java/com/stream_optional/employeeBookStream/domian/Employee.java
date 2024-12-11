@@ -3,11 +3,11 @@ package com.stream_optional.employeeBookStream.domian;
 import java.util.Objects;
 
 public class Employee {
+    private int id;
     private int salary;
     private int department;
     private String name;
     private String surname;
-    private int id;
     private static int count = 1;
 
     public Employee(String name, String surname) {
@@ -64,12 +64,13 @@ public class Employee {
         if (object == null || getClass() != object.getClass()) return false;
         Employee employee = (Employee) object;
         return Objects.equals(name, employee.name) && Objects.equals(surname, employee.surname)
-                && Objects.equals(id, employee.id);
+                && Objects.equals(id, employee.id) && Objects.equals(salary, employee.salary)
+                && Objects.equals(department, employee.department);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, surname);
+        return Objects.hash(name, surname, department, salary, id);
     }
 
     @Override
@@ -78,6 +79,8 @@ public class Employee {
                 "name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", id= '" + id + '\'' +
+                ", salary='" + salary + '\'' +
+                ", department='" + department + '\'' +
                 '}';
     }
 

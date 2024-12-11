@@ -1,68 +1,46 @@
 package com.stream_optional.employeeBookStream.service.impl;
 
 import com.stream_optional.employeeBookStream.domian.Employee;
-import com.stream_optional.employeeBookStream.exception.DepartmentNotFoundException;
+import com.stream_optional.employeeBookStream.repository.EmployeeRepository;
 import com.stream_optional.employeeBookStream.service.api.EmployeeService;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
-
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
-    private final Map<Integer, Employee> EMPLOYEE_MAP = new HashMap<>();
+    private final EmployeeRepository employeeRepository;
 
-    @Override
-    public void addEmployee(Employee employee) {
-        EMPLOYEE_MAP.put(employee.getId(), employee);
-
-    }
-
-    @Override
-    public Collection<Employee> getAllEmployee() {
-        return EMPLOYEE_MAP.values().stream().
-                sorted(Comparator.comparing(Employee::getDepartment))
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public void removeEmployee(Integer id) {
-        EMPLOYEE_MAP.remove(id);
-    }
-
-    @Override
-    public Employee findEmployee(Integer id) {
-        return EMPLOYEE_MAP.get(id);
+    public EmployeeServiceImpl(EmployeeRepository employeeRepository) {
+        this.employeeRepository = employeeRepository;
     }
 
     @Override
     public void setSalaryEmployee(Integer id, Integer salary) {
-        EMPLOYEE_MAP.get(id).setSalary(salary);
+        employeeRepository.find(id).setSalary(salary);
+    }
+    @Override
+    public void addEmployee(Employee employee) {
+        employeeRepository.add(employee);
+
     }
 
     @Override
-    public void setDepartmentEmployee(Integer id, Integer department) {
-        if (department > 0 && department < 5) {
-            EMPLOYEE_MAP.get(id).setDepartment(department);
-        } else throw new DepartmentNotFoundException();
+    public Map<Integer, List<Employee>> getAllEmployee() {
+        return employeeRepository.getAll().values().stream().
+                sorted(Comparator.comparing(Employee::getDepartment))
+                .collect(Collectors.groupingBy(Employee::getDepartment));
     }
 
     @Override
-    public Optional<Employee> findMaxSalaryByDepartment(Integer department) {
-        return EMPLOYEE_MAP.values().stream()
-                .filter(employee -> employee.getDepartment() == department)
-                .max(Comparator.comparing(Employee::getSalary));
+    public void removeEmployee(Integer id) {
+        employeeRepository.remove(id);
     }
 
     @Override
-    public Optional<Employee> findMinSalaryByDepartment(Integer department) {
-        return EMPLOYEE_MAP.values()
-                .stream().filter(employee -> employee.getDepartment() == department)
-                .min(Comparator.comparing(Employee::getSalary));
+    public Employee findEmployee(Integer id) {
+        return employeeRepository.find(id);
     }
 
-    public Collection<Employee> findAllEmployeeByDepartment(Integer department) {
-        return EMPLOYEE_MAP.values().stream().filter(employee -> employee.getDepartment()==department)
-                .collect(Collectors.toList());
-    }
+
 }
