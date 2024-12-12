@@ -1,9 +1,11 @@
 package com.stream_optional.employeeBookStream.service.impl;
 
 import com.stream_optional.employeeBookStream.domian.Employee;
+import com.stream_optional.employeeBookStream.exception.IncorrectNameOrSurnameUsersException;
 import com.stream_optional.employeeBookStream.repository.EmployeeRepository;
 import com.stream_optional.employeeBookStream.service.api.EmployeeService;
 import org.springframework.stereotype.Service;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -23,8 +25,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public void addEmployee(Employee employee) {
-        employeeRepository.add(employee);
-
+        if (StringUtils.isAlpha(employee.getName())
+                && StringUtils.isAlpha(employee.getSurname())) {
+            employee.setSurname(StringUtils.capitalize(employee.getSurname()));
+            employee.setName(StringUtils.capitalize(employee.getName()));
+            employeeRepository.add(employee);
+        } else throw new IncorrectNameOrSurnameUsersException();
     }
 
     @Override
@@ -43,6 +49,4 @@ public class EmployeeServiceImpl implements EmployeeService {
     public Employee findEmployee(Integer id) {
         return employeeRepository.find(id);
     }
-
-
 }

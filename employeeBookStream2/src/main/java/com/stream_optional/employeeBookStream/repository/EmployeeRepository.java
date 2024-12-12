@@ -8,7 +8,6 @@ import java.util.Map;
 @Component
 public class EmployeeRepository {
    private final Map<Integer, Employee> EMPLOYEE_MAP = new HashMap<>();
-
     public void add(Employee employee) {
         EMPLOYEE_MAP.put(employee.getId(), employee);
     }
